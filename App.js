@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, Alert } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Alert, ActivityIndicator, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import HeaderComponent from './Components/HeaderComponent';
 import TodoItemComponent from './Components/TodoItemComponent';
 import AddTodoComponent from './Components/AddTodoComponent';
+import SandboxComponent from './Components/SandboxComponent';
 
-export default App = () => {
+const App = () => {
   const [todos, setTodos] = useState([
     { text: 'buy coffee', key: '1' },
     { text: 'create an app', key: '2' },
@@ -28,17 +29,30 @@ export default App = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <HeaderComponent />
-      <View style={styles.content}>
-        <AddTodoComponent submitHandler={submitHandler} />
-        <View style={styles.list}>
-          <FlatList data={todos} renderItem={({ item }) => <TodoItemComponent item={item} pressHandler={pressHandler} />} />
+    // <SandboxComponent />
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
+      <View style={styles.container}>
+        <HeaderComponent />
+        <View style={styles.content}>
+          <AddTodoComponent submitHandler={submitHandler} />
+          <View style={styles.list}>
+            {todos.length > 0 ? (
+              <FlatList data={todos} renderItem={({ item }) => <TodoItemComponent item={item} pressHandler={pressHandler} />} />
+            ) : (
+              <ActivityIndicator />
+            )}
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
@@ -46,9 +60,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   content: {
+    flex: 1,
     padding: 40,
   },
   list: {
+    flex: 1,
     marginTop: 20,
   },
 });
